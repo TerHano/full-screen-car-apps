@@ -5,10 +5,12 @@ import { SiteType } from "./hooks/useAvailableSites";
 import {
   IconDeviceGamepad2,
   IconDeviceTv,
+  IconWorldStar,
   IconWorldWww,
 } from "@tabler/icons-react";
 import { FullscreenButton } from "./components/FullscreenButton";
 import { SiteList } from "./components/SiteList";
+import { FullscreenWarningAlert } from "./components/FullscreenWarningAlert";
 
 function App() {
   const [currentSiteView, setCurrentSiteView] = useState(SiteType.MEDIA);
@@ -41,10 +43,20 @@ function App() {
         ),
         value: SiteType.WEB_PAGES,
       },
+      {
+        label: (
+          <SegmentedControlLabel
+            icon={<IconWorldStar size={18} />}
+            label="Custom Sites"
+          />
+        ),
+        value: SiteType.CUSTOM,
+      },
     ];
   }, []);
   return (
     <Stack p="lg" align="center">
+      <FullscreenWarningAlert />
       <SegmentedControl
         size="lg"
         defaultValue={currentSiteView}

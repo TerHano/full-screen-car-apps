@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Progress, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
-  IconBrandYoutube,
+  IconBrandYoutubeFilled,
   IconExternalLink,
   IconWindowMaximize,
 } from "@tabler/icons-react";
@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { useYoutubeRedirect } from "../hooks/useYoutubeRedirect";
 
 const timeInSeconds = 5;
-// const fullscreenNotificationId = "fullscreenWarning";
 
 export const FullscreenButton = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -49,6 +48,10 @@ export const FullscreenButton = () => {
         opened={opened}
         onClose={close}
         withCloseButton={false}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
       >
         <Stack>
           <Progress
@@ -57,26 +60,26 @@ export const FullscreenButton = () => {
             radius="xs"
             value={progressVal}
             w="full"
-            transitionDuration={5000}
+            transitionDuration={timeInSeconds * 1000}
             onTransitionEnd={() => {
               console.log("Transition End");
               redirectToYoutube();
             }}
           />
-          <Stack align="center">
+          <Stack gap="sm" justify="center" align="center">
+            <IconBrandYoutubeFilled size={48} color="red" />
             <Group gap="xs" justify="center">
-              <IconExternalLink size={14} /> <Text>Redirecting to Youtube</Text>
+              <IconExternalLink size={14} />
+              <Text fw="bold">Redirecting to Youtube</Text>
             </Group>
-            <Text fz="md">
-              You will be redirected to{" "}
-              <a href={youtubeRedirectUrl}>
-                Youtube <IconBrandYoutube color="#FF0000" />
-              </a>
-              in {timeInSeconds} seconds, please click 'GO TO SITE' when asked
-              to enable fullscreen
+            <Text ta="center" fz="md">
+              You will be redirected to Youtube in {timeInSeconds} seconds,
+              please click 'GO TO SITE' when asked to enable fullscreen
             </Text>
           </Stack>
-          <Button onClick={close}>Cancel</Button>
+          <Button size="md" onClick={close}>
+            Cancel
+          </Button>
         </Stack>
       </Modal>
     </>
