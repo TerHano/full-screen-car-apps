@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { OpenGraphImageResponse } from "../models/OpenGraphImageResponse";
 
+const getSiteImageUrl = `${
+  import.meta.env.VITE_OPEN_GRAPH_SERVER_URL
+}/site-image-url`;
+
 export const useGetSiteImage = (siteUrl: string | null) => {
   const [data, setData] = useState<OpenGraphImageResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,18 +18,15 @@ export const useGetSiteImage = (siteUrl: string | null) => {
     }
     setIsLoading(true);
     try {
-      const response = await fetch(
-        "https://opengraphdetailsextracter.onrender.com/site-image-url",
-        {
-          method: "POST",
-          body: JSON.stringify({ siteUrl: url }),
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          signal: AbortSignal.timeout(3000),
-        }
-      );
+      const response = await fetch(getSiteImageUrl, {
+        method: "POST",
+        body: JSON.stringify({ siteUrl: url }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        signal: AbortSignal.timeout(3000),
+      });
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }

@@ -100,7 +100,6 @@ export const CustomSiteModal = ({
   return (
     <Modal
       transitionProps={{ transition: "slide-up" }}
-      centered
       opened={opened}
       onClose={close}
       withCloseButton={false}

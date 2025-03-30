@@ -44,7 +44,12 @@ export const SitePreview = ({
           </Card>
         )}
 
-        <LoadingOverlay w={200} visible={isLoading} />
+        <LoadingOverlay
+          loaderProps={{ color: "blue", type: "bars" }}
+          overlayProps={{ radius: "lg" }}
+          w={200}
+          visible={isLoading}
+        />
       </Box>
       <SiteNamePreview siteNameInput={siteNameInputValue} />
 
