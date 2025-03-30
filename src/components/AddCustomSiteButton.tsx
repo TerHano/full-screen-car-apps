@@ -1,4 +1,4 @@
-import { Card, Flex, Stack, Text } from "@mantine/core";
+import { Card, Flex, Stack, Text, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconWorldPlus } from "@tabler/icons-react";
 import { CustomSiteModal } from "./CustomSiteModal";
@@ -11,7 +11,7 @@ export const AddCustomSiteButton = ({
   animationDelay,
 }: AddCustomSiteButtonProps) => {
   const [opened, { open, close }] = useDisclosure(false);
-
+  const theme = useMantineTheme();
   return (
     <>
       <Card
@@ -21,7 +21,10 @@ export const AddCustomSiteButton = ({
         radius="lg"
         component="button"
         className="cardAnimation"
-        style={{ animationDelay: `${animationDelay}ms` }}
+        style={{
+          animationDelay: `${animationDelay}ms`,
+          backgroundColor: theme.colors.dark[8],
+        }}
         h={150}
         w={300}
         withBorder

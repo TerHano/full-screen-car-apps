@@ -11,9 +11,11 @@ import {
 import { FullscreenButton } from "./components/FullscreenButton";
 import { SiteList } from "./components/SiteList";
 import { FullscreenWarningAlert } from "./components/FullscreenWarningAlert";
+import { useMediaQuery } from "@mantine/hooks";
 
 function App() {
   const [currentSiteView, setCurrentSiteView] = useState(SiteType.MEDIA);
+  const matches = useMediaQuery("(min-width: 40rem)");
   const options = useMemo(() => {
     return [
       {
@@ -58,6 +60,7 @@ function App() {
     <Stack p="lg" align="center">
       <FullscreenWarningAlert />
       <SegmentedControl
+        orientation={matches ? "horizontal" : "vertical"}
         size="lg"
         defaultValue={currentSiteView}
         onChange={(val) => setCurrentSiteView(val as SiteType)}
