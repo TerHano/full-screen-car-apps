@@ -12,8 +12,10 @@ import { FullscreenButton } from "./components/FullscreenButton";
 import { SiteList } from "./components/SiteList";
 import { FullscreenWarningAlert } from "./components/FullscreenWarningAlert";
 import { useMediaQuery } from "@mantine/hooks";
+import { useCheckAPIHealth } from "./hooks/useCheckAPIHealth";
 
 function App() {
+  useCheckAPIHealth();
   const [currentSiteView, setCurrentSiteView] = useState(SiteType.MEDIA);
   const matches = useMediaQuery("(min-width: 40rem)");
   const options = useMemo(() => {
@@ -69,6 +71,7 @@ function App() {
       <Card withBorder shadow="xs" p="xl" w="100%">
         <SiteList siteType={currentSiteView} />
       </Card>
+
       <FullscreenButton />
       <Text size="sm" fs="italic" c="dimmed">
         Developed By Terry Hanoman

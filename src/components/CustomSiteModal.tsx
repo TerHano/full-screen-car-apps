@@ -1,17 +1,17 @@
 import { Modal, TextInput, Button, Group, Text, Flex } from "@mantine/core";
 import { useForm, matches } from "@mantine/form";
-import { useLocalStorage } from "@mantine/hooks";
 import { SiteInfo, SiteType } from "../hooks/useAvailableSites";
 import { v4 as uuidv4 } from "uuid";
-import { useCallback, useState } from "react";
-import { IconWorldStar } from "@tabler/icons-react";
+import { useCallback, useEffect, useState } from "react";
+import { IconWorldMinus, IconWorldStar } from "@tabler/icons-react";
 import { useGetSiteImage } from "../hooks/useGetSiteImage";
 import { SitePreview } from "./SitePreview";
+import { useCustomSites } from "../hooks/useCustomSites";
+import { validUrlRegex } from "../util";
 
 interface AddCustomSiteFormValues {
   name: string;
   url: string;
-  imageSrc: string;
 }
 
 interface CustomSiteModalProps {
@@ -25,10 +25,11 @@ export const CustomSiteModal = ({
   opened,
   close,
 }: CustomSiteModalProps) => {
-  const [, setCustomSites] = useLocalStorage<SiteInfo[]>({
-    key: "customSites",
-    defaultValue: [],
-  });
+  const {
+    add: addCustomSite,
+    remove: removeCustomSite,
+    update: updateCustomSite,
+  } = useCustomSites();
   const [imageUrl, setImageUrl] = useState<string | null>(site?.link ?? null);
   const [siteNameInputValue, setSiteNameInputValue] = useState<string | null>(
     site?.name ?? null
@@ -38,15 +39,11 @@ export const CustomSiteModal = ({
     initialValues: {
       name: site?.name ?? "",
       url: site?.link ?? "",
-      imageSrc: site?.imageSrc ?? "",
     },
     validate: {
       name: (value) =>
         value.length < 3 ? "Name must be at least 3 characters" : null,
-      url: matches(
-        /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi,
-        "Invalid URL"
-      ),
+      url: matches(validUrlRegex, "Invalid URL"),
     },
   });
 
@@ -54,18 +51,21 @@ export const CustomSiteModal = ({
     setSiteNameInputValue(value);
   });
 
-  const getImageUrl = useCallback(() => {
-    const urlVal = form.getValues().url;
-    if (urlVal) {
-      setImageUrl(urlVal);
-    }
-  }, [form]);
-
-  const imageQuery = useGetSiteImage(imageUrl, { enabled: opened });
+  const imageQuery = useGetSiteImage(imageUrl, {
+    enabled: opened,
+  });
   const {
     data: { imageUrl: openGraphImageUrl, siteTitle },
+    clearData,
     isLoading: isImageLoading,
   } = imageQuery;
+
+  const deleteSite = useCallback(() => {
+    if (site) {
+      removeCustomSite(site.id);
+    }
+    close();
+  }, [close, removeCustomSite, site]);
 
   const handleSubmit = useCallback(
     async (values: AddCustomSiteFormValues) => {
@@ -85,20 +85,28 @@ export const CustomSiteModal = ({
         type: SiteType.CUSTOM,
       };
       if (!site) {
-        setCustomSites((prevSites) => [...prevSites, newSite]);
+        addCustomSite(newSite);
       } else {
-        setCustomSites((prevSites) =>
-          prevSites.map((s) => (s.id === site.id ? newSite : s))
-        );
+        updateCustomSite(site.id, newSite);
       }
       form.setInitialValues(values);
       close();
     },
-    [close, form, openGraphImageUrl, setCustomSites, site]
+    [site, openGraphImageUrl, form, close, addCustomSite, updateCustomSite]
   );
+
+  useEffect(() => {
+    form.setValues({
+      name: site?.name ?? "",
+      url: site?.link ?? "",
+    });
+    setImageUrl(site?.link ?? "");
+    console.log(site);
+  }, [site]);
 
   return (
     <Modal
+      size="lg"
       transitionProps={{ transition: "slide-up" }}
       opened={opened}
       onClose={close}
@@ -108,7 +116,8 @@ export const CustomSiteModal = ({
         blur: 3,
       }}
       onExitTransitionEnd={() => {
-        form.reset();
+        setImageUrl(null);
+        clearData();
       }}
       title={
         <Group gap="xs" justify="center" align="center">
@@ -127,7 +136,11 @@ export const CustomSiteModal = ({
             imageQuery={imageQuery}
           />
           <TextInput
-            onBlurCapture={getImageUrl}
+            onBlurCapture={() => {
+              console.log("cap", form.getValues().url);
+
+              setImageUrl(form.getValues().url);
+            }}
             withAsterisk
             key={form.key("url")}
             label="Url"
@@ -144,14 +157,25 @@ export const CustomSiteModal = ({
             {...form.getInputProps("name")}
           />
 
-          <Group justify="end">
-            <Button color="gray" variant="light" onClick={close} size="md">
-              Cancel
-            </Button>
+          <Group justify={site ? "space-between" : "end"}>
+            {site ? (
+              <Button
+                leftSection={<IconWorldMinus size={16} />}
+                onClick={deleteSite}
+                color="red"
+              >
+                Delete Site
+              </Button>
+            ) : null}
 
-            <Button disabled={isImageLoading} size="md" type="submit">
-              {site ? "Update Site" : " Add Site"}
-            </Button>
+            <Group gap="xs">
+              <Button color="gray" variant="light" onClick={close}>
+                Cancel
+              </Button>
+              <Button disabled={isImageLoading} type="submit">
+                {site ? "Update Site" : " Add Site"}
+              </Button>
+            </Group>
           </Group>
         </Flex>
       </form>

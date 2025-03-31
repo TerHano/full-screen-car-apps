@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { OpenGraphImageResponse } from "../models/OpenGraphImageResponse";
+import { validUrlRegex } from "../util";
 
 const getSiteImageUrl = `${
   import.meta.env.VITE_OPEN_GRAPH_SERVER_URL
@@ -16,7 +17,7 @@ export const useGetSiteImage = (
   const [data, setData] = useState<OpenGraphImageResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const fetchSiteImage = async (url: string) => {
+  const fetchSiteImage = useCallback(async (url: string) => {
     if (
       !url.toLowerCase().startsWith("http://") &&
       !url.toLowerCase().startsWith("https://")
@@ -37,9 +38,10 @@ export const useGetSiteImage = (
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-      response.json().then((data: OpenGraphImageResponse) => {
+      await response.json().then((data: OpenGraphImageResponse) => {
         if (data.success) {
           setData(data);
+          setIsError(false);
         } else {
           setIsError(true);
           setData(null);
@@ -52,13 +54,19 @@ export const useGetSiteImage = (
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  const clearData = useCallback(() => {
+    setData(null);
+  }, []);
 
   useEffect(() => {
-    if (siteUrl && enabled) {
-      fetchSiteImage(siteUrl);
+    const isValid =
+      Boolean(siteUrl) && enabled && validUrlRegex.test(siteUrl ?? "");
+    if (isValid) {
+      fetchSiteImage(siteUrl ?? "");
     }
-  }, [enabled, siteUrl]);
+  }, [enabled, fetchSiteImage, siteUrl]);
 
   return {
     data: {
@@ -67,5 +75,6 @@ export const useGetSiteImage = (
     },
     isLoading,
     isError,
+    clearData,
   };
 };

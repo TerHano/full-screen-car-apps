@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Card,
   Flex,
   Group,
@@ -9,14 +10,19 @@ import {
 } from "@mantine/core";
 import { SiteInfo, SiteType } from "../../hooks/useAvailableSites";
 import { useState } from "react";
-import { EditCustomSiteButton } from "../EditCustomSiteButton";
+import { IconEditCircle } from "@tabler/icons-react";
 
 export interface SiteCardProps {
   site: SiteInfo;
   animationDelay?: number;
+  onEdit?: (site: SiteInfo) => void;
 }
 
-export const SiteCard = ({ site, animationDelay = 0 }: SiteCardProps) => {
+export const SiteCard = ({
+  site,
+  animationDelay = 0,
+  onEdit,
+}: SiteCardProps) => {
   const { imageAlt, imageSrc, link, name, type } = site;
   const [loading, setLoading] = useState(false);
   return (
@@ -60,7 +66,17 @@ export const SiteCard = ({ site, animationDelay = 0 }: SiteCardProps) => {
           {name}
         </Text>
         {type === SiteType.CUSTOM ? (
-          <EditCustomSiteButton siteInfo={site} />
+          <ActionIcon
+            variant="light"
+            size="lg"
+            onClick={() => {
+              if (onEdit) {
+                onEdit(site);
+              }
+            }}
+          >
+            <IconEditCircle size={20} />
+          </ActionIcon>
         ) : null}
       </Group>
     </Stack>

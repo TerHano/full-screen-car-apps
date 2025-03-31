@@ -1,42 +1,49 @@
 import { Card, Flex, Stack, Text, useMantineTheme } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconWorldPlus } from "@tabler/icons-react";
-import { CustomSiteModal } from "./CustomSiteModal";
 
 export interface AddCustomSiteButtonProps {
   animationDelay?: number;
+  openModal: () => void;
 }
 
 export const AddCustomSiteButton = ({
   animationDelay,
+  openModal,
 }: AddCustomSiteButtonProps) => {
-  const [opened, { open, close }] = useDisclosure(false);
   const theme = useMantineTheme();
   return (
     <>
-      <Card
-        onClick={open}
-        shadow="sm"
-        padding="xl"
-        radius="lg"
-        component="button"
+      <Stack
+        align="center"
         className="cardAnimation"
         style={{
           animationDelay: `${animationDelay}ms`,
-          backgroundColor: theme.colors.dark[8],
         }}
-        h={150}
-        w={300}
-        withBorder
       >
-        <Flex w="100%" h="100%" align="center" justify="center">
-          <Stack align="center" justify="center" gap="xs">
-            <IconWorldPlus size={42} />
-            <Text fw="bold">Add New Site</Text>
-          </Stack>
-        </Flex>
-      </Card>
-      <CustomSiteModal opened={opened} close={close} />
+        <Card
+          onClick={() => {
+            openModal();
+          }}
+          shadow="sm"
+          padding="xl"
+          radius="lg"
+          component="button"
+          style={{
+            backgroundColor: theme.colors.dark[8],
+          }}
+          h={150}
+          w={300}
+          withBorder
+        >
+          <Flex w="100%" h="100%" align="center" justify="center">
+            <Stack align="center" justify="center" gap="xs">
+              <IconWorldPlus size={42} />
+              <Text fw="bold">Add New Site</Text>
+            </Stack>
+          </Flex>
+        </Card>
+        <Text fs="italic">Click To Add New Site</Text>
+      </Stack>
     </>
   );
 };

@@ -10,6 +10,9 @@ import {
 } from "@mantine/core";
 import { useGetSiteImage } from "../hooks/useGetSiteImage";
 
+const imagePreviewHeight = 150;
+const imagePreviewWidth = 300;
+
 export const SitePreview = ({
   imageQuery,
   siteNameInputValue,
@@ -23,21 +26,26 @@ export const SitePreview = ({
     data: { imageUrl, siteTitle },
     isLoading,
   } = imageQuery;
-
+  console.log(imageUrl);
   return (
     <Stack gap="xs" w="100%" justify="center" align="center">
       <Text>Site Preview</Text>
-      <Box h={100} w={200} pos="relative">
+      <Box h={imagePreviewHeight} w={imagePreviewWidth} pos="relative">
         {imageUrl ? (
           <Image
-            h={100}
-            w={200}
+            h={imagePreviewHeight}
+            w={imagePreviewWidth}
             src={imageUrl}
             fallbackSrc="https://placehold.co/800x400?text=Image+Here"
             radius="lg"
           />
         ) : (
-          <Card radius="lg" bg="black" h={100} w={200}>
+          <Card
+            radius="lg"
+            bg="black"
+            h={imagePreviewHeight}
+            w={imagePreviewWidth}
+          >
             <Flex align="center" justify="center" h="100%">
               <SiteNamePreview siteNameInput={siteNameInputValue} />
             </Flex>
@@ -47,7 +55,7 @@ export const SitePreview = ({
         <LoadingOverlay
           loaderProps={{ color: "blue", type: "bars" }}
           overlayProps={{ radius: "lg" }}
-          w={200}
+          w={imagePreviewWidth}
           visible={isLoading}
         />
       </Box>
@@ -56,7 +64,7 @@ export const SitePreview = ({
       {siteTitle ? (
         <Button onClick={onSuggestedTitleClick} variant="subtle" size="xs">
           <Text
-            maw={300}
+            maw={imagePreviewWidth}
             truncate
             size="xs"
             fw="unset"
@@ -79,7 +87,7 @@ const SiteNamePreview = ({
       Site Name Here
     </Text>
   ) : (
-    <Text maw={300} truncate="end" fw="bold">
+    <Text maw={imagePreviewWidth} truncate="end" fw="bold">
       {siteNameInput}
     </Text>
   );
