@@ -79,7 +79,7 @@ const SiteNamePreview = ({
       Site Name Here
     </Text>
   ) : (
-    <Text truncate="end" fw="bold">
+    <Text maw={300} truncate="end" fw="bold">
       {siteNameInput}
     </Text>
   );

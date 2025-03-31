@@ -5,7 +5,14 @@ const getSiteImageUrl = `${
   import.meta.env.VITE_OPEN_GRAPH_SERVER_URL
 }/site-image-url`;
 
-export const useGetSiteImage = (siteUrl: string | null) => {
+type GetSiteImageUrlOptions = {
+  enabled?: boolean;
+};
+
+export const useGetSiteImage = (
+  siteUrl: string | null,
+  { enabled = true }: GetSiteImageUrlOptions = {}
+) => {
   const [data, setData] = useState<OpenGraphImageResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -48,10 +55,10 @@ export const useGetSiteImage = (siteUrl: string | null) => {
   };
 
   useEffect(() => {
-    if (siteUrl) {
+    if (siteUrl && enabled) {
       fetchSiteImage(siteUrl);
     }
-  }, [siteUrl]);
+  }, [enabled, siteUrl]);
 
   return {
     data: {

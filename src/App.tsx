@@ -57,7 +57,7 @@ function App() {
     ];
   }, []);
   return (
-    <Stack p="lg" align="center">
+    <Stack p="xl" align="center">
       <FullscreenWarningAlert />
       <SegmentedControl
         orientation={matches ? "horizontal" : "vertical"}

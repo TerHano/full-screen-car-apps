@@ -61,7 +61,7 @@ export const CustomSiteModal = ({
     }
   }, [form]);
 
-  const imageQuery = useGetSiteImage(imageUrl);
+  const imageQuery = useGetSiteImage(imageUrl, { enabled: opened });
   const {
     data: { imageUrl: openGraphImageUrl, siteTitle },
     isLoading: isImageLoading,
