@@ -9,7 +9,7 @@ import { SitePreview } from "./SitePreview";
 import { useCustomSites } from "../hooks/useCustomSites";
 import { validUrlRegex } from "../util";
 
-interface AddCustomSiteFormValues {
+export interface AddCustomSiteFormValues {
   name: string;
   url: string;
 }
@@ -31,10 +31,8 @@ export const CustomSiteModal = ({
     update: updateCustomSite,
   } = useCustomSites();
   const [imageUrl, setImageUrl] = useState<string | null>(site?.link ?? null);
-  const [siteNameInputValue, setSiteNameInputValue] = useState<string | null>(
-    site?.name ?? null
-  );
-  const form = useForm<AddCustomSiteFormValues>({
+
+  const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       name: site?.name ?? "",
@@ -47,15 +45,11 @@ export const CustomSiteModal = ({
     },
   });
 
-  form.watch("name", ({ value }) => {
-    setSiteNameInputValue(value);
-  });
-
   const imageQuery = useGetSiteImage(imageUrl, {
     enabled: opened,
   });
   const {
-    data: { imageUrl: openGraphImageUrl, siteTitle },
+    data: { imageUrl: openGraphImageUrl },
     clearData,
     isLoading: isImageLoading,
   } = imageQuery;
@@ -128,17 +122,9 @@ export const CustomSiteModal = ({
     >
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap="sm">
-          <SitePreview
-            onSuggestedTitleClick={() => {
-              if (siteTitle) form.setFieldValue("name", siteTitle);
-            }}
-            siteNameInputValue={siteNameInputValue}
-            imageQuery={imageQuery}
-          />
+          <SitePreview form={form} imageQuery={imageQuery} />
           <TextInput
             onBlurCapture={() => {
-              console.log("cap", form.getValues().url);
-
               setImageUrl(form.getValues().url);
             }}
             withAsterisk

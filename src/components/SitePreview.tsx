@@ -9,24 +9,34 @@ import {
   Flex,
 } from "@mantine/core";
 import { useGetSiteImage } from "../hooks/useGetSiteImage";
+import { useCallback, useState } from "react";
+import { UseFormReturnType } from "@mantine/form";
+import { AddCustomSiteFormValues } from "./CustomSiteModal";
 
 const imagePreviewHeight = 150;
 const imagePreviewWidth = 300;
 
 export const SitePreview = ({
   imageQuery,
-  siteNameInputValue,
-  onSuggestedTitleClick,
+  form,
 }: {
-  onSuggestedTitleClick: () => void;
-  siteNameInputValue: string | null;
   imageQuery: ReturnType<typeof useGetSiteImage>;
+  form: UseFormReturnType<AddCustomSiteFormValues>;
 }) => {
+  const [siteName, setSiteName] = useState<string>("");
   const {
     data: { imageUrl, siteTitle },
     isLoading,
   } = imageQuery;
-  console.log(imageUrl);
+  form.watch("name", ({ value }) => {
+    setSiteName(value);
+  });
+
+  const onSuggestedTitleClick = useCallback(() => {
+    if (siteTitle) {
+      form.setFieldValue("name", siteTitle);
+    }
+  }, [form, siteTitle]);
   return (
     <Stack gap="xs" w="100%" justify="center" align="center">
       <Text>Site Preview</Text>
@@ -47,7 +57,7 @@ export const SitePreview = ({
             w={imagePreviewWidth}
           >
             <Flex align="center" justify="center" h="100%">
-              <SiteNamePreview siteNameInput={siteNameInputValue} />
+              <SiteNamePreview siteNameInput={siteName} />
             </Flex>
           </Card>
         )}
@@ -59,7 +69,7 @@ export const SitePreview = ({
           visible={isLoading}
         />
       </Box>
-      <SiteNamePreview siteNameInput={siteNameInputValue} />
+      <SiteNamePreview siteNameInput={siteName} />
 
       {siteTitle ? (
         <Button onClick={onSuggestedTitleClick} variant="subtle" size="xs">
