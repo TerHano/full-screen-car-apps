@@ -14,7 +14,7 @@ export enum SiteType {
   CUSTOM = "custom",
 }
 
-import maxLogo from "../assets/images/max_logo.jpeg";
+import maxLogo from "../assets/images/max_logo.webp";
 import crunchyRollLogo from "../assets/images/crunchyroll_logo.webp";
 import amazonPrimeLogo from "../assets/images/amazon_prime_logo.webp";
 import paramountLogo from "../assets/images/paramount_logo.png";
