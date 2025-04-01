@@ -13,7 +13,7 @@ export const FullscreenWarningAlert = () => {
         title="You May Not Be In Fullscreen!"
         icon={<IconAlertTriangle />}
       >
-        Press the GO FULLSCREEN button before selecting any apps
+        Press the 'GO FULLSCREEN' button before selecting any apps
       </Alert>
     );
   } else {

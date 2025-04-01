@@ -1,9 +1,21 @@
-import { Modal, TextInput, Button, Group, Text, Flex } from "@mantine/core";
+import {
+  Modal,
+  TextInput,
+  Button,
+  Group,
+  Text,
+  Flex,
+  Stack,
+} from "@mantine/core";
 import { useForm, matches } from "@mantine/form";
 import { SiteInfo, SiteType } from "../hooks/useAvailableSites";
 import { v4 as uuidv4 } from "uuid";
 import { useCallback, useEffect, useState } from "react";
-import { IconWorldMinus, IconWorldStar } from "@tabler/icons-react";
+import {
+  IconCornerRightUp,
+  IconWorldMinus,
+  IconWorldStar,
+} from "@tabler/icons-react";
 import { useGetSiteImage } from "../hooks/useGetSiteImage";
 import { SitePreview } from "./SitePreview";
 import { useCustomSites } from "../hooks/useCustomSites";
@@ -49,7 +61,7 @@ export const CustomSiteModal = ({
     enabled: opened,
   });
   const {
-    data: { imageUrl: openGraphImageUrl },
+    data: { imageUrl: openGraphImageUrl, siteTitle },
     clearData,
     isLoading: isImageLoading,
   } = imageQuery;
@@ -95,7 +107,6 @@ export const CustomSiteModal = ({
       url: site?.link ?? "",
     });
     setImageUrl(site?.link ?? "");
-    console.log(site);
   }, [site]);
 
   return (
@@ -121,7 +132,7 @@ export const CustomSiteModal = ({
       }
     >
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap="sm">
+        <Flex direction="column" gap="md">
           <SitePreview form={form} imageQuery={imageQuery} />
           <TextInput
             onBlurCapture={() => {
@@ -134,16 +145,35 @@ export const CustomSiteModal = ({
             size="md"
             {...form.getInputProps("url")}
           />
-          <TextInput
-            withAsterisk
-            key={form.key("name")}
-            label="Name"
-            placeholder="Google"
-            size="md"
-            {...form.getInputProps("name")}
-          />
-
-          <Group justify={site ? "space-between" : "end"}>
+          <Stack align="flex-start" gap={2}>
+            <TextInput
+              w="100%"
+              withAsterisk
+              key={form.key("name")}
+              label="Name"
+              placeholder="Google"
+              size="md"
+              {...form.getInputProps("name")}
+            />
+            {siteTitle ? (
+              <Group gap="xs">
+                <Text fz="xs">Suggested Title:</Text>
+                <Button
+                  onClick={() => {
+                    form.setValues({ name: siteTitle });
+                  }}
+                  variant="transparent"
+                  size="compact-sm"
+                  rightSection={<IconCornerRightUp size={12} />}
+                >
+                  <Text truncate size="xs" fw="unset">
+                    {siteTitle}
+                  </Text>
+                </Button>
+              </Group>
+            ) : null}
+          </Stack>
+          <Group mt="md" justify={site ? "space-between" : "end"}>
             {site ? (
               <Button
                 leftSection={<IconWorldMinus size={16} />}

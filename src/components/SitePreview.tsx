@@ -4,12 +4,11 @@ import {
   Box,
   Text,
   Stack,
-  Button,
   Card,
   Flex,
 } from "@mantine/core";
 import { useGetSiteImage } from "../hooks/useGetSiteImage";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { UseFormReturnType } from "@mantine/form";
 import { AddCustomSiteFormValues } from "./CustomSiteModal";
 
@@ -23,20 +22,15 @@ export const SitePreview = ({
   imageQuery: ReturnType<typeof useGetSiteImage>;
   form: UseFormReturnType<AddCustomSiteFormValues>;
 }) => {
-  const [siteName, setSiteName] = useState<string>("");
+  const [siteName, setSiteName] = useState<string>(form.getValues().name);
   const {
-    data: { imageUrl, siteTitle },
+    data: { imageUrl },
     isLoading,
   } = imageQuery;
   form.watch("name", ({ value }) => {
     setSiteName(value);
   });
 
-  const onSuggestedTitleClick = useCallback(() => {
-    if (siteTitle) {
-      form.setFieldValue("name", siteTitle);
-    }
-  }, [form, siteTitle]);
   return (
     <Stack gap="xs" w="100%" justify="center" align="center">
       <Text>Site Preview</Text>
@@ -70,17 +64,6 @@ export const SitePreview = ({
         />
       </Box>
       <SiteNamePreview siteNameInput={siteName} />
-
-      {siteTitle ? (
-        <Button onClick={onSuggestedTitleClick} variant="subtle" size="xs">
-          <Text
-            maw={imagePreviewWidth}
-            truncate
-            size="xs"
-            fw="unset"
-          >{`Use suggested title: '${siteTitle}'`}</Text>
-        </Button>
-      ) : null}
     </Stack>
   );
 };
