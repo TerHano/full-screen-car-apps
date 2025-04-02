@@ -72,9 +72,13 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
     remove: removeCustomSite,
     update: updateCustomSite,
   } = useCustomSites();
-  const [imageUrl, setImageUrl] = useDebouncedState<string | null>(null, 800, {
-    leading: true,
-  });
+  const [imageUrl, setImageUrl] = useDebouncedState<string | null>(
+    site?.link ?? null,
+    800,
+    {
+      leading: true,
+    }
+  );
 
   const combobox = useCombobox();
 
@@ -149,11 +153,18 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
       <Flex direction="column" gap="md">
         <SitePreview form={form} imageQuery={imageQuery} />
         <TextInput
+          inputWrapperOrder={["label", "input", "description", "error"]}
           withAsterisk
           key={form.key("url")}
           label="Url"
           placeholder="https://www.google.com"
           size="md"
+          description={
+            <Text fz="xs" component="text">
+              The URL of the site you want to add. If available, a site image
+              will be extracted from the URL
+            </Text>
+          }
           {...form.getInputProps("url")}
         />
         <Stack align="flex-start" gap={2}>
@@ -167,6 +178,13 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
           >
             <Combobox.Target>
               <TextInput
+                inputWrapperOrder={["label", "input", "description", "error"]}
+                description={
+                  <Text fz="xs" component="text">
+                    If the name for your site can be extracted from the url,
+                    look out for the lightbulb button
+                  </Text>
+                }
                 w="100%"
                 withAsterisk
                 key={form.key("name")}
@@ -174,6 +192,8 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
                 placeholder="Google"
                 size="md"
                 onBlur={() => combobox.closeDropdown()}
+                onFocus={() => combobox.closeDropdown()}
+                onClick={() => combobox.closeDropdown()}
                 {...form.getInputProps("name")}
                 rightSection={
                   <Transition
@@ -211,24 +231,6 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
               </Combobox.Options>
             </Combobox.Dropdown>
           </Combobox>
-
-          {/* {siteTitle ? (
-            <Group gap="xs">
-              <Text fz="xs">Suggested Title:</Text>
-              <Button
-                onClick={() => {
-                  form.setValues({ name: siteTitle });
-                }}
-                variant="transparent"
-                size="compact-sm"
-                rightSection={<IconCornerRightUp size={12} />}
-              >
-                <Text truncate size="xs" fw="unset">
-                  {siteTitle}
-                </Text>
-              </Button>
-            </Group>
-          ) : null} */}
         </Stack>
         <Group mt="md" justify={site ? "space-between" : "end"}>
           {site ? (
