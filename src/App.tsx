@@ -10,9 +10,9 @@ import {
 } from "@tabler/icons-react";
 import { FullscreenButton } from "./components/FullscreenButton";
 import { SiteList } from "./components/SiteList";
-import { FullscreenWarningAlert } from "./components/FullscreenWarningAlert";
 import { useMediaQuery } from "@mantine/hooks";
 import { useCheckAPIHealth } from "./hooks/useCheckAPIHealth";
+import { FullscreenNotification } from "./components/FullscreenNotification";
 
 function App() {
   useCheckAPIHealth();
@@ -60,7 +60,7 @@ function App() {
   }, []);
   return (
     <Stack p="xl" align="center">
-      <FullscreenWarningAlert />
+      <FullscreenNotification />
       <SegmentedControl
         orientation={matches ? "horizontal" : "vertical"}
         size="lg"

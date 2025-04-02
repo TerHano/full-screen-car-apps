@@ -6,16 +6,16 @@ import {
   Text,
   Flex,
   Stack,
+  Combobox,
+  useCombobox,
+  ActionIcon,
+  Transition,
 } from "@mantine/core";
 import { useForm, matches } from "@mantine/form";
 import { SiteInfo, SiteType } from "../hooks/useAvailableSites";
 import { v4 as uuidv4 } from "uuid";
 import { useCallback } from "react";
-import {
-  IconCornerRightUp,
-  IconWorldMinus,
-  IconWorldStar,
-} from "@tabler/icons-react";
+import { IconBulb, IconWorldMinus, IconWorldStar } from "@tabler/icons-react";
 import { useGetSiteImage } from "../hooks/useGetSiteImage";
 import { SitePreview } from "./SitePreview";
 import { useCustomSites } from "../hooks/useCustomSites";
@@ -75,6 +75,8 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
   const [imageUrl, setImageUrl] = useDebouncedState<string | null>(null, 800, {
     leading: true,
   });
+
+  const combobox = useCombobox();
 
   const form = useForm({
     mode: "uncontrolled",
@@ -155,16 +157,62 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
           {...form.getInputProps("url")}
         />
         <Stack align="flex-start" gap={2}>
-          <TextInput
-            w="100%"
-            withAsterisk
-            key={form.key("name")}
-            label="Name"
-            placeholder="Google"
-            size="md"
-            {...form.getInputProps("name")}
-          />
-          {siteTitle ? (
+          <Combobox
+            onOptionSubmit={(optionValue) => {
+              form.setValues({ name: optionValue });
+              combobox.closeDropdown();
+            }}
+            transitionProps={{ duration: 200, transition: "pop" }}
+            store={combobox}
+          >
+            <Combobox.Target>
+              <TextInput
+                w="100%"
+                withAsterisk
+                key={form.key("name")}
+                label="Name"
+                placeholder="Google"
+                size="md"
+                onBlur={() => combobox.closeDropdown()}
+                {...form.getInputProps("name")}
+                rightSection={
+                  <Transition
+                    mounted={Boolean(siteTitle)}
+                    transition="fade-right"
+                    duration={300}
+                    timingFunction="ease"
+                  >
+                    {(styles) => (
+                      <ActionIcon
+                        style={styles}
+                        onClick={() => combobox.openDropdown()}
+                        variant="subtle"
+                      >
+                        <IconBulb size={18} />
+                      </ActionIcon>
+                    )}
+                  </Transition>
+                }
+              />
+            </Combobox.Target>
+
+            <Combobox.Dropdown hidden={!siteTitle}>
+              <Combobox.Options>
+                <Combobox.Header>
+                  <Group align="center" gap={3}>
+                    <IconBulb size={14} /> <Text fz="xs">Suggested Title</Text>
+                  </Group>
+                </Combobox.Header>
+                {siteTitle ? (
+                  <Combobox.Option value={siteTitle}>
+                    {siteTitle}
+                  </Combobox.Option>
+                ) : null}
+              </Combobox.Options>
+            </Combobox.Dropdown>
+          </Combobox>
+
+          {/* {siteTitle ? (
             <Group gap="xs">
               <Text fz="xs">Suggested Title:</Text>
               <Button
@@ -180,7 +228,7 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
                 </Text>
               </Button>
             </Group>
-          ) : null}
+          ) : null} */}
         </Stack>
         <Group mt="md" justify={site ? "space-between" : "end"}>
           {site ? (

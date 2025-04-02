@@ -65,6 +65,7 @@ export const useGetSiteImage = (
     if (initialValue) {
       setData(initialValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- For initial value
   }, []);
   useEffect(() => {
     const isValid =
