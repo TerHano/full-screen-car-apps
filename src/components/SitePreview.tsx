@@ -32,38 +32,44 @@ export const SitePreview = ({
   });
 
   return (
-    <Stack gap="xs" w="100%" justify="center" align="center">
-      <Text>Site Preview</Text>
-      <Box h={imagePreviewHeight} w={imagePreviewWidth} pos="relative">
-        {imageUrl ? (
-          <Image
-            h={imagePreviewHeight}
-            w={imagePreviewWidth}
-            src={imageUrl}
-            fallbackSrc="https://placehold.co/800x400?text=Image+Here"
-            radius="lg"
-          />
-        ) : (
-          <Card
-            radius="lg"
-            bg="black"
-            h={imagePreviewHeight}
-            w={imagePreviewWidth}
-          >
-            <Flex align="center" justify="center" h="100%">
-              <SiteNamePreview siteNameInput={siteName} />
-            </Flex>
-          </Card>
-        )}
+    <Stack gap="xs" align="center">
+      <Text fs="italic" fw="bold">
+        Site Preview
+      </Text>
+      <Card withBorder>
+        <Stack gap="xs" w="100%" justify="center" align="center">
+          <Box h={imagePreviewHeight} w={imagePreviewWidth} pos="relative">
+            {imageUrl ? (
+              <Image
+                h={imagePreviewHeight}
+                w={imagePreviewWidth}
+                src={imageUrl}
+                fallbackSrc="https://placehold.co/800x400?text=Image+Here"
+                radius="lg"
+              />
+            ) : (
+              <Card
+                radius="lg"
+                bg="black"
+                h={imagePreviewHeight}
+                w={imagePreviewWidth}
+              >
+                <Flex align="center" justify="center" h="100%">
+                  <SiteNamePreview siteNameInput={siteName} />
+                </Flex>
+              </Card>
+            )}
 
-        <LoadingOverlay
-          loaderProps={{ color: "blue", type: "bars" }}
-          overlayProps={{ radius: "lg" }}
-          w={imagePreviewWidth}
-          visible={isLoading}
-        />
-      </Box>
-      <SiteNamePreview siteNameInput={siteName} />
+            <LoadingOverlay
+              loaderProps={{ color: "blue", type: "bars" }}
+              overlayProps={{ radius: "lg" }}
+              w={imagePreviewWidth}
+              visible={isLoading}
+            />
+          </Box>
+          <SiteNamePreview siteNameInput={siteName} />
+        </Stack>
+      </Card>
     </Stack>
   );
 };

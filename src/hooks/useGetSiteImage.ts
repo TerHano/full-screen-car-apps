@@ -8,11 +8,12 @@ const getSiteImageUrl = `${
 
 type GetSiteImageUrlOptions = {
   enabled?: boolean;
+  initialValue?: OpenGraphImageResponse;
 };
 
 export const useGetSiteImage = (
   siteUrl: string | null,
-  { enabled = true }: GetSiteImageUrlOptions = {}
+  { enabled = true, initialValue }: GetSiteImageUrlOptions = {}
 ) => {
   const [data, setData] = useState<OpenGraphImageResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +61,11 @@ export const useGetSiteImage = (
     setData(null);
   }, []);
 
+  useEffect(() => {
+    if (initialValue) {
+      setData(initialValue);
+    }
+  }, []);
   useEffect(() => {
     const isValid =
       Boolean(siteUrl) && enabled && validUrlRegex.test(siteUrl ?? "");
