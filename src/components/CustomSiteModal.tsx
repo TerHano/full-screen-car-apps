@@ -44,7 +44,7 @@ export const CustomSiteModal = ({
       transitionProps={{ transition: "slide-up" }}
       opened={opened}
       onClose={close}
-      withCloseButton={false}
+      closeOnClickOutside={false}
       overlayProps={{
         backgroundOpacity: 0.55,
         blur: 3,
@@ -74,10 +74,7 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
   } = useCustomSites();
   const [imageUrl, setImageUrl] = useDebouncedState<string | null>(
     site?.link ?? null,
-    800,
-    {
-      leading: true,
-    }
+    800
   );
 
   const combobox = useCombobox();
@@ -243,14 +240,9 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
             </Button>
           ) : null}
 
-          <Group gap="xs">
-            <Button color="gray" variant="light" onClick={close}>
-              Cancel
-            </Button>
-            <Button disabled={isImageLoading} type="submit">
-              {site ? "Update Site" : " Add Site"}
-            </Button>
-          </Group>
+          <Button disabled={isImageLoading} type="submit">
+            {site ? "Update Site" : " Add Site"}
+          </Button>
         </Group>
       </Flex>
     </form>

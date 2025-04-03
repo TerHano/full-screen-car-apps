@@ -62,7 +62,6 @@ export const FullscreenButton = () => {
             w="full"
             transitionDuration={timeInSeconds * 1000}
             onTransitionEnd={() => {
-              console.log("Transition End");
               redirectToYoutube();
             }}
           />
@@ -77,9 +76,19 @@ export const FullscreenButton = () => {
               please click 'GO TO SITE' when asked to enable fullscreen
             </Text>
           </Stack>
-          <Button size="md" onClick={close}>
-            Cancel
-          </Button>
+          <Group justify="space-between">
+            <Button variant="light" color="white" size="md" onClick={close}>
+              Cancel
+            </Button>
+            <Button
+              size="md"
+              onClick={() => {
+                redirectToYoutube();
+              }}
+            >
+              Skip
+            </Button>
+          </Group>
         </Stack>
       </Modal>
     </>
