@@ -11,6 +11,7 @@ import {
 import { SiteInfo, SiteType } from "../../hooks/useAvailableSites";
 import { useState } from "react";
 import { IconEditCircle } from "@tabler/icons-react";
+import { useWindowEvent } from "@mantine/hooks";
 
 export interface SiteCardProps {
   site: SiteInfo;
@@ -23,6 +24,11 @@ export const SiteCard = ({
   animationDelay = 0,
   onEdit,
 }: SiteCardProps) => {
+  useWindowEvent("pageshow", (event) => {
+    if (event.persisted) {
+      setLoading(false);
+    }
+  });
   const { imageAlt, imageSrc, link, name, type } = site;
   const [loading, setLoading] = useState(false);
   return (
