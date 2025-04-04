@@ -157,11 +157,12 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
           placeholder="https://www.google.com"
           size="md"
           description={
-            <Text fz="xs" component="text">
+            <Text fz="xs">
               The URL of the site you want to add. If available, a site image
               will be extracted from the URL
             </Text>
           }
+          descriptionProps={{ component: "div" }}
           {...form.getInputProps("url")}
         />
         <Stack align="flex-start" gap={2}>
@@ -177,11 +178,12 @@ const CustomSiteModalBody = ({ site, close }: CustomSiteModalBodyProps) => {
               <TextInput
                 inputWrapperOrder={["label", "input", "description", "error"]}
                 description={
-                  <Text fz="xs" component="text">
+                  <Text fz="xs">
                     If the name for your site can be extracted from the url,
                     look out for the lightbulb button
                   </Text>
                 }
+                descriptionProps={{ component: "div" }}
                 w="100%"
                 withAsterisk
                 key={form.key("name")}
