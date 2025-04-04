@@ -5,6 +5,7 @@ import { SiteType } from "./hooks/useAvailableSites";
 import {
   IconDeviceGamepad2,
   IconDeviceTv,
+  IconProps,
   IconWorldStar,
   IconWorldWww,
 } from "@tabler/icons-react";
@@ -17,13 +18,18 @@ import { FullscreenNotification } from "./components/FullscreenNotification";
 function App() {
   useCheckAPIHealth();
   const [currentSiteView, setCurrentSiteView] = useState(SiteType.MEDIA);
-  const matches = useMediaQuery("(min-width: 40rem)");
+  const showLabelName = useMediaQuery("(min-width: 31rem)");
+  console.log("showLabelName", showLabelName);
   const options = useMemo(() => {
+    const iconProps: IconProps = {
+      size: showLabelName ? 18 : 24,
+    };
     return [
       {
         label: (
           <SegmentedControlLabel
-            icon={<IconDeviceTv size={18} />}
+            showLabelName={showLabelName}
+            icon={<IconDeviceTv {...iconProps} />}
             label="Media"
           />
         ),
@@ -32,7 +38,8 @@ function App() {
       {
         label: (
           <SegmentedControlLabel
-            icon={<IconDeviceGamepad2 size={18} />}
+            showLabelName={showLabelName}
+            icon={<IconDeviceGamepad2 {...iconProps} />}
             label="Games"
           />
         ),
@@ -41,8 +48,9 @@ function App() {
       {
         label: (
           <SegmentedControlLabel
-            icon={<IconWorldWww size={18} />}
-            label="Web Pages"
+            showLabelName={showLabelName}
+            icon={<IconWorldWww {...iconProps} />}
+            label="Web"
           />
         ),
         value: SiteType.WEB_PAGES,
@@ -50,19 +58,19 @@ function App() {
       {
         label: (
           <SegmentedControlLabel
-            icon={<IconWorldStar size={18} />}
-            label="Custom Sites"
+            showLabelName={showLabelName}
+            icon={<IconWorldStar {...iconProps} />}
+            label="Custom"
           />
         ),
         value: SiteType.CUSTOM,
       },
     ];
-  }, []);
+  }, [showLabelName]);
   return (
     <Stack p="xl" align="center">
       <FullscreenNotification />
       <SegmentedControl
-        orientation={matches ? "horizontal" : "vertical"}
         size="lg"
         defaultValue={currentSiteView}
         onChange={(val) => setCurrentSiteView(val as SiteType)}
@@ -83,17 +91,19 @@ function App() {
 export default App;
 
 export interface SegmentedControlLabelProps {
+  showLabelName?: boolean;
   label: string;
   icon: React.ReactNode;
 }
 export const SegmentedControlLabel = ({
+  showLabelName = true,
   label,
   icon,
 }: SegmentedControlLabelProps) => {
   return (
     <Flex align="center" justify="center" gap={5}>
       {icon}
-      <Text fw="bold">{label}</Text>
+      {showLabelName ? <Text fw="bold">{label}</Text> : null}
     </Flex>
   );
 };
