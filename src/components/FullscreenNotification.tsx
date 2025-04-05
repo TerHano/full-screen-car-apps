@@ -1,4 +1,4 @@
-import { Portal, Transition, Notification } from "@mantine/core";
+import { Portal, Transition, Notification, Container } from "@mantine/core";
 import appConfig from "../../app.config.json";
 import { useEffect, useRef, useState } from "react";
 import { IconMaximize } from "@tabler/icons-react";
@@ -29,29 +29,36 @@ export const FullscreenNotification = () => {
         timingFunction="ease"
       >
         {(styles) => (
-          <Notification
-            withBorder
-            color="yellow"
-            icon={<IconMaximize size={16} />}
+          <Container
+            fluid
             style={{
-              margin: "1rem",
               position: "absolute",
               top: 0,
               right: 0,
               zIndex: 9999,
-              ...styles,
+              overflow: "hidden",
             }}
-            onClose={() => {
-              setShowNotification(false);
-              if (timeoutIdRef.current) {
-                clearTimeout(timeoutIdRef.current);
-              }
-            }}
-            title="You May Not Be In Fullscreen!
-"
           >
-            Press the 'GO FULLSCREEN' button before selecting any apps
-          </Notification>
+            <Notification
+              withBorder
+              color="yellow"
+              icon={<IconMaximize size={16} />}
+              style={{
+                margin: "1rem",
+                ...styles,
+              }}
+              onClose={() => {
+                setShowNotification(false);
+                if (timeoutIdRef.current) {
+                  clearTimeout(timeoutIdRef.current);
+                }
+              }}
+              title="You May Not Be In Fullscreen!
+"
+            >
+              Press the 'GO FULLSCREEN' button before selecting any apps
+            </Notification>{" "}
+          </Container>
         )}
       </Transition>
     </Portal>
